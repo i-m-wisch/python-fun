@@ -1,5 +1,9 @@
 #!/usr/bin/env python
-from prettytable import PrettyTable
+
+try:
+    from prettytable import PrettyTable
+except ImportError:
+    textout = True
 import sys
 
 patched = {
@@ -88,10 +92,17 @@ hexmodel = hex(int(cpudict['model']))[2:]
 cpufamily = ("000{}0{}{}{}" .format(hexmodel[0], cpudict['cpu family'],
              hexmodel[1], cpudict['stepping'])).upper()
 
-table = PrettyTable(["CPU Model Name", "CPUID", "Current Microcode Version", "Patched Microcode Version"])
-table.add_row([cpudict['model name'], cpufamily, cpudict['microcode'], patched[cpufamily]])
+if textout:
+    print "CPU Model Name:             {}" .format(cpudict['model name'])
+    print "CPUID:                      {}" .format(cpufamily)
+    print "Current Microcode Version:  {}" .format(cpudict['microcode'])
+    print "Patched Microcode Version:  {}" .format(patched[cpufamily])
+else:
+    table = PrettyTable(["CPU Model Name", "CPUID", "Current Microcode Version", "Patched Microcode Version"])
+    table.add_row([cpudict['model name'], cpufamily, cpudict['microcode'], patched[cpufamily]])
 
-print table
+    print table
+
 if cpudict['microcode'] == patched[cpufamily]:
     sys.exit(0)
 else:
