@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+textout = False
 try:
     from prettytable import PrettyTable
 except ImportError:
